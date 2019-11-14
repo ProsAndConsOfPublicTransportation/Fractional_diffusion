@@ -4,7 +4,7 @@ deltaK=0.5;
 mash_max_size=0.01;
 initial_u=0;
 t=linspace(0,1000,1000);
-bc_fun=@(region,state)500*k*thick;
+bc_fun=@(region,state)500;
 
 k=800;
 rho = 8960;
@@ -41,7 +41,7 @@ ns2=[82 82 82 82 82 82 82 82 82 80; 49 50 51 52 53 54 55 56 57 49];
 geometry = decsg(gdmTrans',sf2,ns2);
 
 [u1,pb]=FEM_plate_sim(c,a,f,d,geometry,initial_u,t,bc_fun,mash_max_size,true,0,false);
-u1_upper_edge=Temperature_at_edge(u1,1.5,pb);
+u1_upper_edge=Temperature_at_edge(u1,1.5,0.75,pb);
 
 figure;
     pdeplot(pb, 'xydata', u1(:,end)/10, 'contour', 'on', 'colormap', 'jet');
@@ -75,7 +75,7 @@ initial_u=u1;
 t=linspace(1000,2000,1000);
 
 [u2,pb2]=FEM_plate_sim(c,a,f,d,geometry,initial_u,t,bc_fun,mash_max_size,false,pb,false);
-u2_upper_edge=Temperature_at_edge(u2,1.5,pb2);
+u2_upper_edge=Temperature_at_edge(u2,1.5,0.75,pb2);
 
 figure;
     pdeplot(pb2, 'xydata', u2(:,end)/10, 'contour', 'on', 'colormap', 'jet');
@@ -89,8 +89,12 @@ figure;
 %CHECK_SECOND_ORDER
 initial_u=0;
 [u2_0,pb2_0]=FEM_plate_sim(c,a,f,d,geometry,initial_u,t,bc_fun,mash_max_size,true,0,false);
-u2_upper_edge_0=Temperature_at_edge(u2_0,1.5,pb2_0);
-[alpha_a_2,error_2]=Find_order(specificHeat,k,rho,u1_upper_edge);
+u2_upper_edge_0=Temperature_at_edge(u2_0,1.5,0.75,pb2_0);
+[alpha_a_2,error_2]=Find_order(specificHeat,k,rho,u2_upper_edge_0);
 
 
 
+a0=alpha_a_1(2);
+a1=alpha_a_2(2);
+alpha0=alpha_a_1(1);
+alpha1=alpha_a_2(1);
